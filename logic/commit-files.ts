@@ -1,8 +1,9 @@
-import { octokit } from "../boot/octokit"
+import { octokit } from "../boot/octokit.ts"
 
 export async function commitFiles(
   owner: string,
   repo: string,
+  branch: string,
   message: string,
   files: {
     path: string
@@ -13,7 +14,7 @@ export async function commitFiles(
   const ref = await octokit.git.getRef({
     owner,
     repo,
-    ref: `heads/main`
+    ref: `heads/${branch}`
   })
 
   const baseTreeSha = ref.data.object.sha
@@ -54,5 +55,10 @@ export async function commitFiles(
     parents: [baseTreeSha]
   })
 
-  return commit
+  await octokit.git.updateRef({
+    owner,
+    repo,
+    ref: `heads/${branch}`,
+    sha: commit.data.sha
+  })
 }

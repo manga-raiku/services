@@ -1,8 +1,10 @@
 import { Router } from "https://deno.land/x/oak@v12.6.1/mod.ts"
-import { octokit } from "../../constants.ts"
 import { getUserWithToken } from "../../logic/get-user-with-token.ts"
 import { Package } from "npm:raiku-pgs@0.1.1"
 import { uint8ToBase64 } from "https://raw.githubusercontent.com/manga-raiku/raiku-app/main/src/logic/base64.ts"
+import { commitFiles } from "../../logic/commit-files.ts"
+import { octokit } from "../../boot/octokit.ts"
+import { OK_OWNER, OK_REPO, OK_BRANCH } from "../../constants.ts"
 
 const router = new Router()
 
@@ -47,18 +49,20 @@ router.post("/ping-update", async (ctx) => {
     ;[content, fav] = await Promise.all([
       octokit.rest.repos
         .getContent({
-          owner: "manga-raiku",
-          repo: "service-market-raiku",
+          owner: OK_OWNER,
+          repo: OK_REPO,
+          branch: OK_BRANCH,
           path: `plugins/${packageId.toLowerCase()}/index`
         })
-        .then((res) => res.data.content),
+        .then((res) => (res.data as unknown as { content: string }).content),
       octokit.rest.repos
         .getContent({
-          owner: "manga-raiku",
-          repo: "service-market-raiku",
+          owner: OK_OWNER,
+          repo: OK_REPO,
+          branch: OK_BRANCH,
           path: `plugins/${packageId.toLowerCase()}/favicon`
         })
-        .then((res) => res.data.content)
+        .then((res) => (res.data as unknown as { content: string }).content)
     ])
   } catch {
     // not found
@@ -74,7 +78,7 @@ router.post("/ping-update", async (ctx) => {
     ctx.response.body = "You can't ping update plugin"
     return
   }
-
+  
   let newMeta: Package, newFav: string
   try {
     newMeta = await fetch(`${url}/package.mjs`).then((res) => {
@@ -97,19 +101,20 @@ router.post("/ping-update", async (ctx) => {
   } catch (err) {
     console.error(err)
     ctx.response.status = 406
-    ctx.response.body = `Can't fetch plugin:<pre><code>${err}</code></pre>`
+    ctx.response.body = `Can't fetch plugin`
     return
   }
 
   if (meta.version === newMeta.version) {
-    ctx.response.status = 201
+    ctx.response.status = 206
     ctx.response.body = "Plugin is latest version"
     return
   }
 
   await commitFiles(
-    "manga-raiku",
-    "service-market-raiku",
+    OK_OWNER,
+    OK_REPO,
+    OK_BRANCH,
     `[bot]: Update plugin \`${packageId}\``,
     [
       {
@@ -126,14 +131,14 @@ router.post("/ping-update", async (ctx) => {
         )
       },
       ...(fav !== newFav
-        ? [
+        ? ([
             {
               path: `plugins/${packageId.toLowerCase()}/favicon`,
               encoding: "base64",
               content: newFav
             }
-          ]
-        : [])
+          ] as const)
+        : ([] as const))
     ]
   )
 
