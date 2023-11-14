@@ -36,7 +36,7 @@ try {
     throw new Error("URL not found in issue body")
   }
 
-  const urlValue = urlLine.slice(0, urlLine.indexOf("\n") >>> 0)
+  const urlValue = urlLine.slice(0, urlLine.indexOf("\n") >>> 0).trim()
 
   // fetch plugin
   let newMeta: Package

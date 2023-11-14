@@ -33,7 +33,7 @@ try {
     .replace(/^[\s\r\n]+/g, "")
 
   if (urlLine) {
-    const urlValue = urlLine.slice(0, urlLine.indexOf("\n") >>> 0)
+    const urlValue = urlLine.slice(0, urlLine.indexOf("\n") >>> 0).trim()
 
     console.log(await uploadPlugin(user, urlValue))
   } else {
