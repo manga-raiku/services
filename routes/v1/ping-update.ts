@@ -52,7 +52,7 @@ router.post("/ping-update", async (ctx) => {
           owner: OK_OWNER,
           repo: OK_REPO,
           branch: OK_BRANCH,
-          path: `plugins/${packageId.toLowerCase()}/index`
+          path: `plugins/${packageId.toLowerCase()}/index.json`
         })
         .then((res) => (res.data as unknown as { content: string }).content),
       octokit.rest.repos
@@ -118,7 +118,7 @@ router.post("/ping-update", async (ctx) => {
     `[bot]: Update plugin \`${packageId}\``,
     [
       {
-        path: `plugins/${packageId.toLowerCase()}/index`,
+        path: `plugins/${packageId.toLowerCase()}/index.json`,
         encoding: "utf-8",
         content: JSON.stringify(
           {

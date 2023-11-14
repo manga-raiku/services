@@ -69,7 +69,7 @@ router.post("/send-plugin", async (ctx) => {
       owner: OK_OWNER,
       repo: OK_REPO,
       branch: OK_BRANCH,
-      path: `plugins/${newMeta.id.toLowerCase()}/index`
+      path: `plugins/${newMeta.id.toLowerCase()}/index.json`
     })
 
     ctx.response.status = 403
@@ -93,7 +93,7 @@ router.post("/send-plugin", async (ctx) => {
         })
     },
     {
-      path: `plugins/${newMeta.id.toLowerCase()}/index`,
+      path: `plugins/${newMeta.id.toLowerCase()}/index.json`,
       encoding: "utf-8",
       content: JSON.stringify(
         {
