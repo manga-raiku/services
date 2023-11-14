@@ -32,7 +32,7 @@ try {
   }
   comment_body = "The script ran successfully!"
 } catch (err) {
-  comment_body = "There was an error running the script. Error details: " + err
+  comment_body = `There was an error running the script.\nError details: \n\`\`\`${err}\`\`\``
 }
 
 console.log({

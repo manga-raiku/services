@@ -35,7 +35,23 @@ jobs:
             const description = issue.body;
             if (description.includes('#request-upload-plugin')) {
               const commentBody = comment.body.toLowerCase();
-              if (commentBody.includes('accept')) {
+              const commentAuthor = comment.user.login;
+              const repoOwner = context.repo.owner;
+              const repoName = context.repo.repo;
+
+              // Get repository collaborators
+              const collaborators = await github.rest.repos.listCollaborators({
+                owner: repoOwner,
+                repo: repoName,
+                per_page: 100,
+              });
+
+              // Check if the comment author is a collaborator with write access
+              const isCollaboratorWithWriteAccess = collaborators.data.some(collaborator => {
+                return collaborator.login === commentAuthor && collaborator.permissions.push;
+              });
+
+              if (commentBody.includes('accept') && isCollaboratorWithWriteAccess) {
                 console.log('Accepted issue:', issue.number);
                 return JSON.stringify({ id: issue.number, user: issue.user.login })
               } else {
@@ -43,14 +59,14 @@ jobs:
                 return false
               }
             }
-      
+
       - name: Setup env
         run: |
-            echo '' > .env
-            echo 'GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"' >> .env
-            echo 'OK_OWNER="manga-raiku"' >> .env
-            echo 'OK_REPO="service-market-raiku"' >> .env
-            echo 'OK_BRANCH="main"' >> .env
+          echo '' > .env
+          echo 'GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"' >> .env
+          echo 'OK_OWNER="manga-raiku"' >> .env
+          echo 'OK_REPO="service-market-raiku"' >> .env
+          echo 'OK_BRANCH="main"' >> .env
 
       - name: Run scripts upload plugin
         id: run
