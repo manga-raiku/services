@@ -3,6 +3,12 @@ import { octokit } from "../boot/octokit.ts"
 import { join } from "node:path"
 import { OK_OWNER, OK_REPO } from "../constants.ts"
 
+Object.assign(self, {
+  document: {
+    documentElement: { dataset: {} }
+  }
+})
+
 console.log(Deno.args[0])
 
 const { id: issue_number, user } = JSON.parse(Deno.args[0])
