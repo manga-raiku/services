@@ -1,4 +1,4 @@
-import { Package } from "npm:raiku-pgs@0.1.1/plugin"
+import { Package } from "npm:raiku-pgs@0.1.3/plugin"
 import { octokit } from "../boot/octokit.ts"
 import { join } from "node:path"
 import { OK_OWNER, OK_REPO } from "../constants.ts"
@@ -38,7 +38,7 @@ try {
     newMeta = await fetch(join(urlValue, "package.mjs")).then((res) => {
       if (res.status !== 200 && res.status !== 201)
         throw new Error("Failure load plugin")
-      return import("npm:raiku-pgs@0.1.1/thread").then(
+      return import("npm:raiku-pgs@0.1.3/thread").then(
         async ({ execPackageMjs }) =>
           execPackageMjs(await res.text(), true, {
             mode: "spa",
@@ -50,7 +50,7 @@ try {
       )
     })
   } catch (err) {
-    throw `Can't fetch plugin: ${err}`
+    throw new Error(`Can't fetch plugin: ${err}`)
   }
 
   const { favicon } = newMeta
@@ -61,13 +61,15 @@ URL Plugin: [${urlValue}](${urlValue})
 Sender: @${user}
 
 \`\`\`json
+
 ${JSON.stringify(newMeta, null, 2)}
+
 \`\`\`
 
 Icon: ![](${favicon})
 `
 } catch (err) {
-  comment_body = `There was an error running the script.\nError details: \n\`\`\`${err}\`\`\``
+  comment_body = `There was an error running the script.\nError details: \n\`\`\`\n${err}\n\`\`\``
 }
 
 console.log({

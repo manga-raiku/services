@@ -36,7 +36,7 @@ try {
   comment_body = "The script ran successfully!"
   is_success = true
 } catch (err) {
-  comment_body = `There was an error running the script.\nError details: \n\`\`\`${err}\`\`\``
+  comment_body = `There was an error running the script.\nError details: \n \`\`\`\n${err?.body || err}\n\`\`\``
   is_success = false
 }
 

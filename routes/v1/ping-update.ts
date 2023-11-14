@@ -1,6 +1,6 @@
 import { Router } from "https://deno.land/x/oak@v12.6.1/mod.ts"
 import { getUserWithToken } from "../../logic/get-user-with-token.ts"
-import { Package } from "npm:raiku-pgs@0.1.1"
+import { Package } from "npm:raiku-pgs@0.1.3"
 import { uint8ToBase64 } from "https://raw.githubusercontent.com/manga-raiku/raiku-app/main/src/logic/base64.ts"
 import { commitFiles } from "../../logic/commit-files.ts"
 import { octokit } from "../../boot/octokit.ts"
@@ -84,7 +84,7 @@ router.post("/ping-update", async (ctx) => {
     newMeta = await fetch(`${url}/package.mjs`).then((res) => {
       if (res.status !== 200 && res.status !== 201)
         throw new Error("Failure load plugin")
-      return import("npm:raiku-pgs@0.1.1/thread").then(
+      return import("npm:raiku-pgs@0.1.3/thread").then(
         async ({ execPackageMjs }) =>
           execPackageMjs(await res.text(), true, {
             mode: "spa",
