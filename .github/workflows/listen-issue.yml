@@ -1,0 +1,46 @@
+name: Issue Listener
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+  issue_comment:
+    types:
+      - created
+      - edited
+
+jobs:
+  check-issue:
+    name: Check Issue
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.37.2
+
+      - name: Check Issue and Comment
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const comment = context.payload.comment;
+
+            const description = issue.body;
+            if (description.includes('#request-upload-plugin')) {
+              const commentBody = comment.body.toLowerCase();
+              if (commentBody.includes('accept')) {
+                console.log('Accepted issue:', issue.number);
+              } else {
+                console.log('Issue not accepted:', issue.number);
+                return
+              }
+            }
+      
+      - name: Run scripts upload plugin
+        run: deno run ./scripts/upload-plugin.ts
