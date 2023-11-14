@@ -1,0 +1,16 @@
+{
+  "sender": "tachibana-shin",
+  "url": "https://manga-raiku.github.io/raiku-plugin-nettruyen",
+  "meta": {
+    "id": "nettruyen",
+    "name": "Net Truyen",
+    "version": "0.1.6",
+    "description": "Plugin nguồn Net Truyen",
+    "author": "Tachibana Shin <tachibshin@duck.com>",
+    "homepage": "https://github.com/manga-raiku/raiku-plugin-nettruyen",
+    "isNSFW": false,
+    "language": "vi",
+    "support": true,
+    "updatedAt": 1699540999181
+  }
+}
