@@ -21,14 +21,15 @@ try {
   // Parse the issue body
   const issueBody = issue.data.body
 
-  // Assuming the value of 'id: url' is on its own line like 'url: https://example.com/'
-  const urlLine = issueBody?.split("\n").find((line) => line.startsWith("url:"))
+  const urlLine = issueBody
+    ?.slice(issueBody?.indexOf("<!-- #request-upload-plugin -->") + 31)
+    .replace(/^[\s\r\n]+/g, "")
 
   if (!urlLine) {
     throw new Error("URL not found in issue body")
   }
 
-  const urlValue = urlLine.split(":")[1].trim()
+  const urlValue = urlLine.slice(0, urlLine.indexOf("\n") >>> 0)
 
   // fetch plugin
   let newMeta: Package
