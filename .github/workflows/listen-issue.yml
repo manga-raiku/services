@@ -37,7 +37,7 @@ jobs:
               const commentBody = comment.body.toLowerCase();
               if (commentBody.includes('accept')) {
                 console.log('Accepted issue:', issue.number);
-                return { id: issue.number, user: issue.user.login }
+                return JSON.stringify({ id: issue.number, user: issue.user.login })
               } else {
                 console.log('Issue not accepted:', issue.number);
                 return false
