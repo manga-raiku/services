@@ -48,26 +48,3 @@ jobs:
         id: run
         if: steps.check.outputs.result != 'false'
         run: deno run --allow-read ./scripts/upload-plugin.ts ${{ steps.check.outputs.result.user }} ${{ steps.check.outputs.result.id }}
-
-      
-      - name: Comment on issue
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const issue_number = ${{ steps.check.outputs.result.id }};
-            const run_success = ${{ steps.run.outcome == 'success' }};
-            let comment_body;
-
-            if (run_success) {
-              comment_body = 'The script ran successfully!';
-            } else {
-              comment_body = 'There was an error running the script. ${{ steps.run.outputs.error }}';
-            }
-
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issue_number,
-              body: comment_body,
-            });
