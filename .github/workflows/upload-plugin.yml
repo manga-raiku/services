@@ -1,18 +1,14 @@
-name: Issue Listener
+name: Upload plugin
 
 on:
-  issues:
-    types:
-      - opened
-      - edited
   issue_comment:
     types:
       - created
       - edited
 
 jobs:
-  check-issue:
-    name: Check Issue
+  check-and-upload-plugin:
+    name: Check and upload plugin
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +19,7 @@ jobs:
         with:
           deno-version: v1.37.2
 
-      - name: Check Issue and Comment
+      - name: Check plugin and valid accept
         id: check
         uses: actions/github-script@v5
         with:
@@ -59,6 +55,7 @@ jobs:
                 return false
               }
             }
+            return false
 
       - name: Setup env
         run: |

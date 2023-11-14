@@ -25,7 +25,7 @@ export async function uploadPlugin(username: string, urlPlugin: string) {
   } catch (err) {
     return {
       status: 406,
-      body: `Can't fetch plugin`
+      body: `Can't fetch plugin: ${err}`
     }
   }
 
@@ -39,7 +39,7 @@ export async function uploadPlugin(username: string, urlPlugin: string) {
     })
 
     return {
-      status: 403,
+      status: 40,
       body: `Plugin id \`${newMeta.id}\` already exists on market`
     }
     // deno-lint-ignore no-empty

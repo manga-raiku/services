@@ -1,0 +1,50 @@
+name: Check request upload plugin
+
+on:
+    issues:
+        types:
+          - opened
+          - edited
+
+jobs:
+  check-plugin:
+    name: Check request plugin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.37.2
+
+      - name: Check plugin and valid accept
+        id: check
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const comment = context.payload.comment;
+
+            const description = issue.body;
+            if (description.includes('#request-upload-plugin')) {
+                console.log('Request valid issue:', issue.number);
+                return JSON.stringify({ id: issue.number, user: issue.user.login })
+
+            }
+            return false
+
+      - name: Setup env
+        run: |
+          echo '' > .env
+          echo 'GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"' >> .env
+          echo 'OK_OWNER="manga-raiku"' >> .env
+          echo 'OK_REPO="service-market-raiku"' >> .env
+          echo 'OK_BRANCH="main"' >> .env
+
+      - name: Run scripts check plugin
+        id: run
+        if: steps.check.outputs.result != 'false'
+        run: deno run --allow-read --allow-env --allow-net ./scripts/check-plugin.ts ${{ steps.check.outputs.result }}
