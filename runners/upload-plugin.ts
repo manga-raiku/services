@@ -1,6 +1,7 @@
 import { uint8ToBase64 } from "https://raw.githubusercontent.com/manga-raiku/raiku-app/main/src/logic/base64.ts"
 import { Package } from "npm:raiku-pgs@0.1.1/plugin"
 import { octokit } from "../boot/octokit.ts"
+import { join } from "node:path"
 import { OK_OWNER, OK_REPO, OK_BRANCH } from "../constants.ts"
 import { commitFiles } from "../logic/commit-files.ts"
 
@@ -8,7 +9,7 @@ export async function uploadPlugin(username: string, urlPlugin: string) {
   // fetch plugin
   let newMeta: Package
   try {
-    newMeta = await fetch(`${urlPlugin}/package.mjs`).then((res) => {
+    newMeta = await fetch(join(urlPlugin, "package.mjs")).then((res) => {
       if (res.status !== 200 && res.status !== 201)
         throw new Error("Failure load plugin")
       return import("npm:raiku-pgs@0.1.1/thread").then(

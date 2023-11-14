@@ -1,5 +1,6 @@
 import { Package } from "npm:raiku-pgs@0.1.1/plugin"
 import { octokit } from "../boot/octokit.ts"
+import { join } from "node:path"
 import { OK_OWNER, OK_REPO } from "../constants.ts"
 
 console.log(Deno.args[0])
@@ -34,7 +35,7 @@ try {
   // fetch plugin
   let newMeta: Package
   try {
-    newMeta = await fetch(`${urlValue}/package.mjs`).then((res) => {
+    newMeta = await fetch(join(urlValue, "package.mjs")).then((res) => {
       if (res.status !== 200 && res.status !== 201)
         throw new Error("Failure load plugin")
       return import("npm:raiku-pgs@0.1.1/thread").then(
@@ -49,10 +50,7 @@ try {
       )
     })
   } catch (err) {
-    throw {
-      status: 406,
-      body: `Can't fetch plugin: ${err}`
-    }
+    throw `Can't fetch plugin: ${err}`
   }
 
   const { favicon } = newMeta
