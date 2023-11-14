@@ -2,7 +2,9 @@ import { octokit } from "../boot/octokit.ts"
 import { OK_OWNER, OK_REPO } from "../constants.ts"
 import { uploadPlugin } from "../runners/upload-plugin.ts"
 
-const issue_number = parseInt(Deno.args[1])
+console.log(Deno.args[0])
+
+const { id: issue_number, user } = JSON.parse(Deno.args[0])
 
 let comment_body: string
 try {
@@ -24,7 +26,7 @@ try {
 
   if (urlLine) {
     const urlValue = urlLine.split(":")[1].trim()
-    console.log(await uploadPlugin(Deno.args[0], urlValue))
+    console.log(await uploadPlugin(user, urlValue))
   } else {
     throw new Error("URL not found in issue body")
   }
