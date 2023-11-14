@@ -1,0 +1,21 @@
+name: Upload plugin
+description: Upload plugin to market issue
+labels: ["Upload plugin"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Where is the plugin address?
+      description: Enter the web address or affected application link.
+      placeholder: ex. https://example.com/
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Privacy
+      description: By submitting this issue, you agree that report does not contain private info
+      options:
+        - label: I agree to follow this condition
+          required: true

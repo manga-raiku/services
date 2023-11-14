@@ -24,6 +24,7 @@ jobs:
           deno-version: v1.37.2
 
       - name: Check Issue and Comment
+        id: check
         uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -36,11 +37,13 @@ jobs:
               const commentBody = comment.body.toLowerCase();
               if (commentBody.includes('accept')) {
                 console.log('Accepted issue:', issue.number);
+                return { id: issue.number }
               } else {
                 console.log('Issue not accepted:', issue.number);
-                return
+                return false
               }
             }
       
       - name: Run scripts upload plugin
-        run: deno run ./scripts/upload-plugin.ts
+        if: steps.check.outputs.result != 'false'
+        run: deno run --allow-read ./scripts/upload-plugin.ts ${{ steps.check.outputs.result }}
