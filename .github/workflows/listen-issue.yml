@@ -47,4 +47,4 @@ jobs:
       - name: Run scripts upload plugin
         id: run
         if: steps.check.outputs.result != 'false'
-        run: deno run --allow-read --allow-env ./scripts/upload-plugin.ts ${{ steps.check.outputs.result.user }} ${{ steps.check.outputs.result.id }}
+        run: deno run --allow-read --allow-env --allow-net ./scripts/upload-plugin.ts ${{ steps.check.outputs.result.user }} ${{ steps.check.outputs.result.id }}
