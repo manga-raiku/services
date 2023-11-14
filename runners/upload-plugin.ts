@@ -35,7 +35,7 @@ export async function uploadPlugin(username: string, urlPlugin: string) {
     await octokit.rest.repos.getContent({
       owner: OK_OWNER,
       repo: OK_REPO,
-      branch: OK_BRANCH,
+      ref: OK_BRANCH,
       path: `plugins/${newMeta.id.toLowerCase()}/index.json`
     })
 

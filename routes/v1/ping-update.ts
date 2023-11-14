@@ -51,7 +51,7 @@ router.post("/ping-update", async (ctx) => {
         .getContent({
           owner: OK_OWNER,
           repo: OK_REPO,
-          branch: OK_BRANCH,
+          ref: OK_BRANCH,
           path: `plugins/${packageId.toLowerCase()}/index.json`
         })
         .then((res) => (res.data as unknown as { content: string }).content),
@@ -59,7 +59,7 @@ router.post("/ping-update", async (ctx) => {
         .getContent({
           owner: OK_OWNER,
           repo: OK_REPO,
-          branch: OK_BRANCH,
+          ref: OK_BRANCH,
           path: `plugins/${packageId.toLowerCase()}/favicon`
         })
         .then((res) => (res.data as unknown as { content: string }).content)
