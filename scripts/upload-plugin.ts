@@ -33,6 +33,13 @@ try {
   comment_body = "There was an error running the script. Error details: " + err
 }
 
+console.log({
+  owner: OK_OWNER,
+  repo: OK_REPO,
+  issue_number: issue_number,
+  body: comment_body
+})
+
 await octokit.rest.issues.createComment({
   owner: OK_OWNER,
   repo: OK_REPO,

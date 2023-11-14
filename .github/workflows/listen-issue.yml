@@ -43,12 +43,15 @@ jobs:
                 return false
               }
             }
+      
+      - name: Setup env
+        run: |
+            echo '' > .env
+            echo 'OK_OWNER="manga-raiku"' >> .env
+            echo 'OK_REPO="service-market-raiku"' >> .env
+            echo 'OK_BRANCH="main"' >> .env
 
       - name: Run scripts upload plugin
         id: run
         if: steps.check.outputs.result != 'false'
-        env:
-          OK_OWNER: "manga-raiku"
-          OK_REPO: "service-market-raiku"
-          OK_BRANCH: "main"
         run: deno run --allow-read --allow-env --allow-net ./scripts/upload-plugin.ts ${{ steps.check.outputs.result.user }} ${{ steps.check.outputs.result.id }}
