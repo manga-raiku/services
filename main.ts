@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
 import { Application, Router } from "https://deno.land/x/oak@v12.6.1/mod.ts"
+import { oakCors } from "https://deno.land/x/cors/mod.ts"
 import WorkerPolyfill from "https://cdn.jsdelivr.net/npm/pseudo-worker/+esm"
 
 import pingUpdate from "./routes/v1/ping-update.ts"
@@ -29,6 +30,11 @@ v1.use(sendPlugin.allowedMethods())
 v1.use("/v1", listPlugin.routes())
 v1.use(listPlugin.allowedMethods())
 
+app.use(
+  oakCors({
+    origin: ["https://mangaraiku.eu.org", "https://raiku.netlify.app", /gitpod\.io$/i]
+  }),
+)
 app.use(v1.routes())
 app.use(v1.allowedMethods())
 
