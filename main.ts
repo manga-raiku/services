@@ -1,4 +1,5 @@
 import { Application, Router } from "https://deno.land/x/oak@v12.6.1/mod.ts"
+import WorkerPolyfill from "https://cdn.jsdelivr.net/npm/pseudo-worker/+esm"
 
 import pingUpdate from "./routes/v1/ping-update.ts"
 import sendPlugin from "./routes/v1/send-plugin.ts"
@@ -9,6 +10,9 @@ Object.assign(self, {
     documentElement: { dataset: {} }
   }
 })
+if (typeof Worker === "undefined") {
+  Object.assign(self, { Worker: WorkerPolyfill })
+}
 
 const app = new Application()
 
