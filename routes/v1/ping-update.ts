@@ -28,7 +28,7 @@ router.post("/ping-update", async (ctx) => {
     username = await getUserWithToken(token)
   } catch {
     ctx.response.status = 401
-    ctx.response.body = "Bad credentials"
+    ctx.response.body = { message: "Bad credentials" }
 
     return
   }
@@ -40,7 +40,7 @@ router.post("/ping-update", async (ctx) => {
 
   if (!packageId) {
     ctx.response.status = 404
-    ctx.response.body = "Required package-id"
+    ctx.response.body = { message: "Required package-id" }
     return
   }
 
@@ -67,7 +67,7 @@ router.post("/ping-update", async (ctx) => {
   } catch {
     // not found
     ctx.response.status = 404
-    ctx.response.body = "Plugin not exists on market"
+    ctx.response.body = { message: "Plugin not exists on market" }
     return
   }
 
@@ -75,10 +75,10 @@ router.post("/ping-update", async (ctx) => {
 
   if (sender !== username) {
     ctx.response.status = 401
-    ctx.response.body = "You can't ping update plugin"
+    ctx.response.body = { message: "You can't ping update plugin" }
     return
   }
-  
+
   let newMeta: Package, newFav: string
   try {
     newMeta = await fetch(`${url}/package.mjs`).then((res) => {
@@ -101,13 +101,13 @@ router.post("/ping-update", async (ctx) => {
   } catch (err) {
     console.error(err)
     ctx.response.status = 406
-    ctx.response.body = `Can't fetch plugin`
+    ctx.response.body = { message: `Can't fetch plugin` }
     return
   }
 
   if (meta.version === newMeta.version) {
     ctx.response.status = 206
-    ctx.response.body = "Plugin is latest version"
+    ctx.response.body = { message: "Plugin is latest version" }
     return
   }
 
@@ -132,18 +132,18 @@ router.post("/ping-update", async (ctx) => {
       },
       ...(fav !== newFav
         ? ([
-            {
-              path: `plugins/${packageId.toLowerCase()}/favicon`,
-              encoding: "base64",
-              content: newFav
-            }
-          ] as const)
+          {
+            path: `plugins/${packageId.toLowerCase()}/favicon`,
+            encoding: "base64",
+            content: newFav
+          }
+        ] as const)
         : ([] as const))
     ]
   )
 
   ctx.response.status = 200
-  ctx.response.body = "Updated plugin"
+  ctx.response.body = { message: "Updated plugin" }
 })
 
 export default router

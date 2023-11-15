@@ -23,14 +23,14 @@ router.post("/send-plugin", async (ctx) => {
     username = await getUserWithToken(token)
   } catch {
     ctx.response.status = 401
-    ctx.response.body = "Bad credentials"
+    ctx.response.body = { message: "Bad credentials" }
 
     return
   }
 
   if (!urlPlugin) {
     ctx.response.status = 404
-    ctx.response.body = "Required url-plugin"
+    ctx.response.body = { message: "Required url-plugin" }
     return
   }
 
