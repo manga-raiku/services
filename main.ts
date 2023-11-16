@@ -32,7 +32,7 @@ v1.use(listPlugin.allowedMethods())
 
 app.use(
   oakCors({
-    origin: ["https://mangaraiku.eu.org", "https://raiku.netlify.app", /gitpod\.io$/i]
+    origin: ["https://mangaraiku.eu.org", "https://raiku.netlify.app", /\.gitpod\.io$/i, "http://localhost"]
   })
 )
 app.use(v1.routes())
