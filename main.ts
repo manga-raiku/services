@@ -7,6 +7,7 @@ import WorkerPolyfill from "https://cdn.jsdelivr.net/npm/pseudo-worker/+esm"
 import pingUpdate from "./routes/v1/ping-update.ts"
 import sendPlugin from "./routes/v1/send-plugin.ts"
 import listPlugin from "./routes/v1/list-plugin.ts"
+import contributors from "./routes/v1/contributors.ts"
 
 Object.assign(self, {
   document: {
@@ -29,6 +30,9 @@ v1.use(sendPlugin.allowedMethods())
 
 v1.use("/v1", listPlugin.routes())
 v1.use(listPlugin.allowedMethods())
+
+v1.use("/v1", contributors.routes())
+v1.use(contributors.allowedMethods())
 
 app.use(
   oakCors({
