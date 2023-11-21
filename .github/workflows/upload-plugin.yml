@@ -62,7 +62,7 @@ jobs:
           echo '' > .env
           echo 'GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"' >> .env
           echo 'OK_OWNER="manga-raiku"' >> .env
-          echo 'OK_REPO="service-plugins"' >> .env
+          echo 'OK_REPO="services"' >> .env
           echo 'OK_BRANCH="plugins"' >> .env
 
       - name: Run scripts upload plugin
